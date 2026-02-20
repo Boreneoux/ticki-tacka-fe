@@ -22,7 +22,13 @@ export default function useFormLogin() {
       try {
         const result = await loginApi({ email, password });
 
-        setAuth({ username: result.user.username, role: result.user.role });
+        setAuth({
+          username: result.user.username,
+          email: result.user.email,
+          fullName: result.user.fullName,
+          role: result.user.role,
+          profilePictureUrl: result.user.profilePictureUrl
+        });
 
         toast.success('Login successful!');
 
