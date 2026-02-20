@@ -29,7 +29,13 @@ export default function useFormRegister() {
       try {
         const result = await registerApi(values);
 
-        setAuth({ username: result.user.username, role: result.user.role });
+        setAuth({
+          username: result.user.username,
+          email: result.user.email,
+          fullName: result.user.fullName,
+          role: result.user.role,
+          profilePictureUrl: result.user.profilePictureUrl
+        });
 
         toast.success('Account created successfully!');
 

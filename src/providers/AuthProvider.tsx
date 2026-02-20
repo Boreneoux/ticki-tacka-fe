@@ -14,7 +14,13 @@ export default function AuthProvider({
     const checkSession = async () => {
       try {
         const user = await sessionApi();
-        setAuth({ username: user.username, role: user.role });
+        setAuth({
+          username: user.username,
+          email: user.email,
+          fullName: user.fullName,
+          role: user.role,
+          profilePictureUrl: user.profilePictureUrl
+        });
       } catch {
         // Not logged in — that's fine, just stay as guest
       } finally {

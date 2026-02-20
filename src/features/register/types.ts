@@ -13,7 +13,10 @@ export type RegisterFormValues = {
 export type RegisterResponseData = {
   user: {
     username: string;
+    email: string;
+    fullName: string;
     role: string;
+    profilePictureUrl: string | null;
   };
   token: string;
 };
