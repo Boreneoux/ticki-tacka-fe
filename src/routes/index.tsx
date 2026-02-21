@@ -8,6 +8,7 @@ import ProtectedRoute from '@/layouts/ProtectedRoute';
 
 // Public pages
 import HomePage from '@/pages/home/HomePage';
+import EventDiscoveryPage from '@/pages/events/EventDiscoveryPage';
 import EventDetailPage from '@/pages/events/EventDetailPage';
 import NotFoundPage from '@/pages/not-found/NotFoundPage';
 
@@ -42,6 +43,7 @@ export const router = createBrowserRouter([
     element: <MainLayout />,
     children: [
       { path: '/', element: <HomePage /> },
+      { path: '/events', element: <EventDiscoveryPage /> },
       { path: '/events/:slug', element: <EventDetailPage /> }
     ]
   },
