@@ -717,6 +717,7 @@ All endpoints are prefixed with: `/api`
 - `GET /api/auth/session` — get current user info (verifyToken)
 - `POST /api/auth/forgot-password`
 - `POST /api/auth/reset-password`
+- `POST /api/auth/logout` — clears httpOnly accessToken cookie (requires auth)
 
 ### User (Customer) Endpoints
 

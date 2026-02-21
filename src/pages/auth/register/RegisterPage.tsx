@@ -13,18 +13,18 @@ import {
   Tag
 } from 'lucide-react';
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import Button from '@/components/ui/Button';
+import Input from '@/components/ui/Input';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle
-} from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Textarea } from '@/components/ui/textarea';
+} from '@/components/ui/Card';
+import Label from '@/components/ui/Label';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/Tabs';
+import Textarea from '@/components/ui/Textarea';
 import useFormRegister from '@/features/register/hooks/useFormRegister';
 
 export default function RegisterPage() {
