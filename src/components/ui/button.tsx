@@ -1,6 +1,7 @@
 import * as React from 'react';
+import { Slot } from '@radix-ui/react-slot';
 
-import { cn } from './utils';
+import { cn } from './Utils';
 
 const variantClasses: Record<string, string> = {
   default: 'bg-primary text-primary-foreground hover:bg-primary/90',
@@ -29,16 +30,20 @@ type ButtonSize = keyof typeof sizeClasses;
 type ButtonProps = React.ComponentProps<'button'> & {
   variant?: ButtonVariant;
   size?: ButtonSize;
+  asChild?: boolean;
 };
 
-function Button({
+export default function Button({
   className,
   variant = 'default',
   size = 'default',
+  asChild = false,
   ...props
 }: ButtonProps) {
+  const Comp = asChild ? Slot : 'button';
+
   return (
-    <button
+    <Comp
       data-slot="button"
       className={cn(
         baseClasses,
@@ -51,5 +56,4 @@ function Button({
   );
 }
 
-export { Button };
 export type { ButtonProps, ButtonVariant, ButtonSize };

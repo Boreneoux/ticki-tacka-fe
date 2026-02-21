@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import { Ticket, ArrowLeft, Search } from 'lucide-react';
 
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import Button from '@/components/ui/Button';
+import { Card, CardContent } from '@/components/ui/Card';
 
 export default function NotFoundPage() {
   const navigate = useNavigate();

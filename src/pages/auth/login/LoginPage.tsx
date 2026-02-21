@@ -2,16 +2,16 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Ticket, Mail, Lock, Eye, EyeOff } from 'lucide-react';
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import Button from '@/components/ui/Button';
+import Input from '@/components/ui/Input';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle
-} from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
+} from '@/components/ui/Card';
+import Label from '@/components/ui/Label';
 import useFormLogin from '@/features/login/hooks/useFormLogin';
 
 export default function LoginPage() {

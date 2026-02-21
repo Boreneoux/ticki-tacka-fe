@@ -1,3 +1,6 @@
+import type { Role } from '@/types/enums';
+import type { User } from '@/types/models';
+
 export type RegisterFormValues = {
   email: string;
   username: string;
@@ -5,18 +8,15 @@ export type RegisterFormValues = {
   fullName: string;
   phoneNumber: string;
   referralCode: string;
-  role: 'User' | 'EO';
+  role: Role;
   organizerName: string;
   companyAddress: string;
 };
 
 export type RegisterResponseData = {
-  user: {
-    username: string;
-    email: string;
-    fullName: string;
-    role: string;
-    profilePictureUrl: string | null;
-  };
+  user: Pick<
+    User,
+    'username' | 'email' | 'fullName' | 'role' | 'profilePictureUrl'
+  >;
   token: string;
 };
