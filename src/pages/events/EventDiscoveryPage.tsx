@@ -174,32 +174,64 @@ export default function EventDiscoveryPage() {
 
     return (
         <div className="min-h-[80vh]">
-            {/* Page Header */}
-            <section className="bg-linear-to-br from-primary/5 via-background to-secondary/5 border-b border-border">
-                <div className="container mx-auto px-4 py-8 md:py-12">
-                    <h1 className="text-2xl md:text-3xl font-bold mb-2">
-                        Discover Events
-                    </h1>
-                    <p className="text-muted-foreground text-sm md:text-base mb-6">
-                        Browse and find your next amazing experience
-                    </p>
+            {/* Jumbotron Header */}
+            <section className="relative overflow-hidden pb-16 md:pb-20" style={{ background: 'linear-gradient(135deg, #0077B6 0%, #00A8E8 40%, #38BDF8 100%)' }}>
+                {/* Confetti/Particle Overlay */}
+                <div
+                    className="absolute inset-0 opacity-20"
+                    style={{
+                        backgroundImage: `
+                            radial-gradient(circle at 10% 15%, white 1.5px, transparent 1.5px),
+                            radial-gradient(circle at 85% 25%, white 1px, transparent 1px),
+                            radial-gradient(circle at 40% 8%, white 2px, transparent 2px),
+                            radial-gradient(circle at 72% 42%, white 1px, transparent 1px),
+                            radial-gradient(circle at 20% 55%, white 1.5px, transparent 1.5px),
+                            radial-gradient(circle at 92% 58%, white 2px, transparent 2px),
+                            radial-gradient(circle at 55% 30%, white 1px, transparent 1px),
+                            radial-gradient(circle at 30% 80%, white 1.5px, transparent 1.5px),
+                            radial-gradient(circle at 65% 70%, white 2px, transparent 2px),
+                            radial-gradient(circle at 80% 85%, white 1px, transparent 1px),
+                            radial-gradient(circle at 15% 40%, white 1px, transparent 1px),
+                            radial-gradient(circle at 50% 60%, white 1.5px, transparent 1.5px)
+                        `,
+                        backgroundSize: '200px 200px, 150px 150px, 180px 180px, 120px 120px, 160px 160px, 140px 140px, 100px 100px, 130px 130px, 170px 170px, 110px 110px, 190px 190px, 145px 145px'
+                    }}
+                    aria-hidden="true"
+                />
 
-                    <EventFilters
-                        searchValue={searchInput}
-                        onSearchChange={handleSearchChange}
-                        onSearchSubmit={handleSearchSubmit}
-                        isSearchLoading={isLoading}
-                        categoryId={categoryId}
-                        onCategoryChange={handleCategoryChange}
-                        categories={categories}
-                        provinceId={provinceId}
-                        onProvinceChange={handleProvinceChange}
-                        provinces={provinces}
-                        cityId={cityId}
-                        onCityChange={handleCityChange}
-                        cities={cities}
-                        isCitiesLoading={isCitiesLoading}
-                    />
+                {/* Soft light overlay for depth */}
+                <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-white/5 to-transparent" aria-hidden="true" />
+
+                {/* Content */}
+                <div className="container mx-auto px-4 pt-12 md:pt-16 relative z-10">
+                    <div className="max-w-3xl mx-auto text-center mb-10 md:mb-14">
+                        <h1 className="text-4xl md:text-5xl lg:text-[3.5rem] font-extrabold text-white mb-4 tracking-tight leading-[1.1] drop-shadow-sm">
+                            Discover Amazing Events
+                        </h1>
+                        <p className="text-base md:text-lg text-white/85 font-normal max-w-xl mx-auto leading-relaxed">
+                            Find and book tickets for concerts, sports, theater, and more
+                        </p>
+                    </div>
+
+                    {/* Filter Card — overlaps into next section */}
+                    <div className="max-w-4xl mx-auto">
+                        <EventFilters
+                            searchValue={searchInput}
+                            onSearchChange={handleSearchChange}
+                            onSearchSubmit={handleSearchSubmit}
+                            isSearchLoading={isLoading}
+                            categoryId={categoryId}
+                            onCategoryChange={handleCategoryChange}
+                            categories={categories}
+                            provinceId={provinceId}
+                            onProvinceChange={handleProvinceChange}
+                            provinces={provinces}
+                            cityId={cityId}
+                            onCityChange={handleCityChange}
+                            cities={cities}
+                            isCitiesLoading={isCitiesLoading}
+                        />
+                    </div>
                 </div>
             </section>
 
