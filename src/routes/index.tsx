@@ -132,7 +132,10 @@ export const router = createBrowserRouter([
           {
             path: '/dashboard/statistics',
             element: <DashboardStatisticsPage />
-          }
+          },
+
+          // Profile (inside dashboard layout for EO)
+          { path: '/dashboard/profile', element: <ProfilePage /> }
         ]
       }
     ]

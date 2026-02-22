@@ -49,7 +49,7 @@ const navItems: SidebarNavItem[] = [
 const bottomNavItems: SidebarNavItem[] = [
   {
     label: 'Profile',
-    path: '/profile',
+    path: '/dashboard/profile',
     icon: <Settings className="size-5" />
   }
 ];
