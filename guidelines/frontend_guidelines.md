@@ -304,11 +304,17 @@
 
 ## 10. User Profile Page
 
-### Route: `/profile` or `/settings`
+### Routes:
+
+- `/profile` — MainLayout (Navbar + Footer), accessible by **User** and **EO** from Navbar
+- `/dashboard/profile` — DashboardLayout (Sidebar + Topbar), accessible by **EO** from DashboardSidebar
+- Both routes render the same `ProfilePage` component
 
 **Requires:** Authenticated (any role)
 
-**Sections:**
+**Layout:** Tabbed interface (Profile, Edit Profile, Change Password, My Points, My Coupons)
+
+**Header:** Displays avatar, full name, email, role badge, and point balance (for Users)
 
 ### 10a. View Profile
 
@@ -319,6 +325,7 @@
 - Phone number
 - Role
 - Referral code (display + copy button)
+- Point balance (computed from unused, non-expired points)
 - If EO: Organizer name, Company address
 
 ### 10b. Edit Profile Form
@@ -337,11 +344,28 @@
 - `newPassword` — required, min 6 chars, must differ from old
 - `confirmPassword` — frontend validation
 
+### 10d. My Points
+
+- Point balance (total active points)
+- Point history list, each entry showing:
+  - Amount, source (e.g. "referral"), status (`active` / `used` / `expired`)
+  - Expiration date
+  - Usage history (if used: amount used, invoice number, date)
+
+### 10e. My Coupons
+
+- Coupon list, each entry showing:
+  - Coupon code, discount type & value, status (`active` / `used` / `expired`)
+  - Expiration date
+  - If used: linked transaction invoice number & date
+
 **APIs:**
 
 - `GET /api/users/profile`
 - `PATCH /api/users/profile` (multipart/form-data, field: `profilePicture`)
 - `PATCH /api/users/password`
+- `GET /api/users/points`
+- `GET /api/users/coupons`
 
 ---
 
@@ -682,7 +706,7 @@
 | 7   | Checkout                       | `/events/:slug/checkout`                  | Yes                    | User |
 | 8   | My Transactions (list)         | `/transactions`                           | Yes                    | User |
 | 9   | Transaction Detail             | `/transactions/:id`                       | Yes                    | User |
-| 10  | User Profile / Settings        | `/profile`                                | Yes                    | Any  |
+| 10  | User Profile / Settings        | `/profile` + `/dashboard/profile` (EO)    | Yes                    | Any  |
 | 11  | Dashboard — My Events          | `/dashboard/events`                       | Yes                    | EO   |
 | 12  | Create Event                   | `/dashboard/events/create`                | Yes                    | EO   |
 | 13  | Edit Event                     | `/dashboard/events/:id/edit`              | Yes                    | EO   |
@@ -724,6 +748,8 @@ All endpoints are prefixed with: `/api`
 - `GET /api/users/profile`
 - `PATCH /api/users/profile`
 - `PATCH /api/users/password`
+- `GET /api/users/points` — point balance + history (status: active/used/expired, usage linked to transactions)
+- `GET /api/users/coupons` — coupon list with status (active/used/expired, linked to transaction if used)
 - `POST /api/transactions`
 - `GET /api/transactions`
 - `GET /api/transactions/:id`
