@@ -103,14 +103,15 @@ export default function EventDetailPage() {
   );
 
 
+  // TODO: Remove this fallback once backend has real ticket quota data
   const ticketTypes = apiTicketTypes.map(ticket => ({
     ...ticket,
     availableQuota: ticket.availableQuota > 0
       ? ticket.availableQuota
       : ticket.name.toLowerCase().includes('vip')
-        ? 10
+        ? 15
         : ticket.name.toLowerCase().includes('regular')
-          ? 15
+          ? 10
           : 20
   }));
 

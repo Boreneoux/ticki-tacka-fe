@@ -104,6 +104,7 @@ export type Event = {
   ticketTypes?: TicketType[];
   eventImages?: EventImage[];
   vouchers?: EventVoucher[];
+  eventVouchers?: EventVoucher[];
   lowestPrice?: number;
 };
 
@@ -135,29 +136,52 @@ export type TransactionItem = {
   ticketType?: Pick<TicketType, 'name' | 'description' | 'price'>;
 };
 
+export type PointUsage = {
+  id: string;
+  userPointId: string;
+  transactionId: string;
+  amountUsed: number;
+};
+
+export type EventVoucherUsage = {
+  id: string;
+  voucherId: string;
+  userId: string;
+  transactionId: string;
+  discountApplied: number;
+};
+
 export type Transaction = {
   id: string;
   invoiceNumber: string;
   userId: string;
   eventId: string;
-  status: TransactionStatus;
+  subtotal: number;
+  paymentStatus: TransactionStatus;
   totalAmount: number;
   pointsUsed: number;
   couponDiscount: number;
   voucherDiscount: number;
-  paymentDeadline: string | null;
+  paymentDeadline: string;
   paymentProofUrl: string | null;
   proofUploadedAt: string | null;
   confirmationDeadline: string | null;
   confirmedAt: string | null;
+  userCouponId: string | null;
+  eventVoucherId: string | null;
   createdAt: string;
-  updatedAt: string;
+  updatedAt: string | null;
   user?: Pick<User, 'username' | 'email' | 'fullName' | 'profilePictureUrl'>;
-  event?: Pick<
-    Event,
-    'id' | 'name' | 'slug' | 'eventDate' | 'venueName' | 'images'
-  >;
-  items?: TransactionItem[];
-  userCoupon?: UserCoupon | null;
-  eventVoucher?: EventVoucher | null;
+  event?: {
+    id: string;
+    name: string;
+    slug: string;
+    eventDate: string;
+    eventTime: string;
+    venueName: string;
+    eventImages?: { imageUrl: string }[];
+  };
+  transactionItems?: TransactionItem[];
+  pointUsages?: PointUsage[];
+  eventVoucherUsages?: EventVoucherUsage[];
 };
