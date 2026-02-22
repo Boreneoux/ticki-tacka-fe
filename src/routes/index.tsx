@@ -28,6 +28,7 @@ import ProfilePage from '@/pages/profile/ProfilePage';
 
 // EO dashboard pages
 import DashboardEventsPage from '@/pages/dashboard/events/DashboardEventsPage';
+import DashboardOverviewPage from '@/pages/dashboard/DashboardOverviewPage';
 import CreateEventPage from '@/pages/dashboard/events/CreateEventPage';
 import EditEventPage from '@/pages/dashboard/events/EditEventPage';
 import EventVouchersPage from '@/pages/dashboard/events/EventVouchersPage';
@@ -73,19 +74,9 @@ export const router = createBrowserRouter([
         children: [
           { path: '/events/:slug/checkout', element: <CheckoutPage /> },
           { path: '/transactions', element: <TransactionsPage /> },
-          { path: '/transactions/:id', element: <TransactionDetailPage /> }
+          { path: '/transactions/:id', element: <TransactionDetailPage /> },
+          { path: '/profile', element: <ProfilePage /> }
         ]
-      }
-    ]
-  },
-
-  // ─── Any-auth protected routes (role: User | EO) ───
-  {
-    element: <ProtectedRoute allowedRoles={['User', 'EO']} />,
-    children: [
-      {
-        element: <MainLayout />,
-        children: [{ path: '/profile', element: <ProfilePage /> }]
       }
     ]
   },
@@ -98,7 +89,7 @@ export const router = createBrowserRouter([
         element: <DashboardLayout />,
         children: [
           // Events management
-          { path: '/dashboard', element: <DashboardEventsPage /> },
+          { path: '/dashboard', element: <DashboardOverviewPage /> },
           { path: '/dashboard/events', element: <DashboardEventsPage /> },
           { path: '/dashboard/events/create', element: <CreateEventPage /> },
           {

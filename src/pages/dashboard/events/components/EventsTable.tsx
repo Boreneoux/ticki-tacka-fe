@@ -8,7 +8,9 @@ import {
   MapPin,
   SendHorizonal,
   Ban,
-  Tag
+  Tag,
+  BarChart3,
+  Users
 } from 'lucide-react';
 import type { Event } from '@/types/models';
 import type { EventStatus } from '@/types/enums';
@@ -176,6 +178,34 @@ export default function EventsTable({
 
             {/* Actions */}
             <div className="flex items-center gap-1 shrink-0">
+              {(event.status === 'published' ||
+                event.status === 'completed') && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 w-7 p-0 text-muted-foreground hover:text-primary"
+                  title="Statistics"
+                  onClick={() =>
+                    navigate(`/dashboard/events/${event.id}/statistics`)
+                  }>
+                  <BarChart3 className="h-3.5 w-3.5" />
+                </Button>
+              )}
+
+              {(event.status === 'published' ||
+                event.status === 'completed') && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 w-7 p-0 text-muted-foreground hover:text-secondary"
+                  title="Attendees"
+                  onClick={() =>
+                    navigate(`/dashboard/events/${event.id}/attendees`)
+                  }>
+                  <Users className="h-3.5 w-3.5" />
+                </Button>
+              )}
+
               <Button
                 variant="ghost"
                 size="sm"
