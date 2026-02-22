@@ -5,13 +5,7 @@ import type { Transaction } from '@/types/models';
 import Button from '@/components/ui/Button';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/Avatar';
 import TransactionStatusBadge from './TransactionStatusBadge';
-
-const formatCurrency = (amount: number) =>
-  new Intl.NumberFormat('id-ID', {
-    style: 'currency',
-    currency: 'IDR',
-    maximumFractionDigits: 0
-  }).format(amount);
+import { formatCurrency } from '@/utils/format';
 
 const formatDate = (dateStr: string) =>
   new Date(dateStr).toLocaleDateString('id-ID', {

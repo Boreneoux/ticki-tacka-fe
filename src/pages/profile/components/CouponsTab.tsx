@@ -16,6 +16,7 @@ import Skeleton from '@/components/ui/Skeleton';
 import EmptyState from '@/components/ui/EmptyState';
 import useCoupons from '@/features/profile/hooks/useCoupons';
 import type { CouponEntry } from '@/features/profile/types';
+import { formatCurrency } from '@/utils/format';
 
 function getStatusBadge(status: CouponEntry['status']) {
   switch (status) {
@@ -40,7 +41,7 @@ function formatDiscount(coupon: CouponEntry) {
   if (coupon.discountType === 'percentage') {
     return `${coupon.discountValue}%`;
   }
-  return `Rp ${coupon.discountValue.toLocaleString()}`;
+  return formatCurrency(coupon.discountValue);
 }
 
 function CouponsSkeleton() {

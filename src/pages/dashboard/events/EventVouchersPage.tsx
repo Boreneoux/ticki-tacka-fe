@@ -14,9 +14,12 @@ export default function EventVouchersPage() {
   const navigate = useNavigate();
 
   const { event, isLoading, refetch } = useOrganizerEventDetail(id!);
-  const { formik: voucherFormik } = useCreateVoucherForm(id!, refetch);
-
   const [isVoucherModalOpen, setIsVoucherModalOpen] = useState(false);
+
+  const { formik: voucherFormik } = useCreateVoucherForm(id!, () => {
+    refetch();
+    setIsVoucherModalOpen(false);
+  });
 
   if (isLoading) {
     return (
@@ -58,7 +61,7 @@ export default function EventVouchersPage() {
 
         <div className="space-y-8">
           <VoucherList
-            vouchers={event.vouchers || []}
+            vouchers={event.eventVouchers ?? event.vouchers ?? []}
             onCreateClick={() => setIsVoucherModalOpen(true)}
           />
         </div>

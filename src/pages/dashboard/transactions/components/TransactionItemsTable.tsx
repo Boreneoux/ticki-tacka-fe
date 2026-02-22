@@ -1,13 +1,7 @@
 import { ShoppingCart } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import type { OrganizerTransactionDetailResponseData } from '@/features/transactions/types';
-
-const formatCurrency = (amount: number) =>
-  new Intl.NumberFormat('id-ID', {
-    style: 'currency',
-    currency: 'IDR',
-    maximumFractionDigits: 0
-  }).format(amount);
+import { formatCurrency } from '@/utils/format';
 
 type TransactionItemsTableProps = {
   transaction: OrganizerTransactionDetailResponseData;

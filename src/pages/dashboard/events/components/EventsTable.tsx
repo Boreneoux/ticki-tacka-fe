@@ -220,6 +220,19 @@ export default function EventsTable({
                   variant="ghost"
                   size="sm"
                   className="h-7 w-7 p-0 text-muted-foreground hover:text-primary"
+                  title="Manage Vouchers"
+                  onClick={() =>
+                    navigate(`/dashboard/events/${event.slug}/vouchers`)
+                  }>
+                  <Tag className="h-3.5 w-3.5" />
+                </Button>
+              )}
+
+              {event.status !== 'canceled' && event.status !== 'completed' && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 w-7 p-0 text-muted-foreground hover:text-primary"
                   title="Edit Event"
                   onClick={() =>
                     navigate(`/dashboard/events/${event.slug}/edit`)

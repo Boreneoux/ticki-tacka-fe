@@ -6,6 +6,16 @@ import type { DiscountType } from '@/types/enums';
 import toast from 'react-hot-toast';
 import axios from 'axios';
 
+/** Format a Date as datetime-local input value in LOCAL time: "YYYY-MM-DDTHH:MM" */
+function toDateTimeLocal(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
+}
+
 export function useCreateVoucherForm(eventId: string, onSuccess?: () => void) {
   const initialValues: VoucherFormValues = {
     voucherCode: '',
@@ -14,7 +24,7 @@ export function useCreateVoucherForm(eventId: string, onSuccess?: () => void) {
     discountValue: '',
     maxDiscount: '',
     maxUsage: '',
-    startDate: '',
+    startDate: toDateTimeLocal(new Date()),
     expiredAt: '',
     isActive: true
   };
@@ -37,7 +47,9 @@ export function useCreateVoucherForm(eventId: string, onSuccess?: () => void) {
         });
 
         toast.success('Voucher created successfully!');
-        resetForm();
+        resetForm({
+          values: { ...initialValues, startDate: toDateTimeLocal(new Date()) }
+        });
         if (onSuccess) onSuccess();
       } catch (error) {
         if (axios.isAxiosError(error)) {

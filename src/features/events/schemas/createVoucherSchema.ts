@@ -10,7 +10,8 @@ export const createVoucherSchema = Yup.object().shape({
     .oneOf(['percentage', 'fixed'], 'Invalid discount type')
     .required('Discount type is required'),
   discountValue: Yup.number()
-    .min(0.01, 'Discount value must be greater than 0')
+    .integer('Discount value must be a whole number')
+    .min(1, 'Discount value must be at least 1')
     .required('Discount value is required'),
   maxDiscount: Yup.number()
     .nullable()

@@ -1,18 +1,10 @@
 import type { AttendeeItem } from '@/features/dashboard/types';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/Avatar';
+import { formatCurrency } from '@/utils/format';
 
 type Props = {
   attendee: AttendeeItem;
 };
-
-function formatCurrency(value: number): string {
-  return new Intl.NumberFormat('id-ID', {
-    style: 'currency',
-    currency: 'IDR',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0
-  }).format(value);
-}
 
 function getInitials(fullName: string): string {
   return fullName

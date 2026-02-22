@@ -10,6 +10,7 @@ import ProtectedRoute from '@/layouts/ProtectedRoute';
 import HomePage from '@/pages/home/HomePage';
 import EventDiscoveryPage from '@/pages/events/EventDiscoveryPage';
 import EventDetailPage from '@/pages/events/EventDetailPage';
+import OrganizerProfilePage from '@/pages/organizer/OrganizerProfilePage';
 import NotFoundPage from '@/pages/not-found/NotFoundPage';
 
 // Guest-only auth pages
@@ -45,7 +46,8 @@ export const router = createBrowserRouter([
     children: [
       { path: '/', element: <HomePage /> },
       { path: '/events', element: <EventDiscoveryPage /> },
-      { path: '/events/:slug', element: <EventDetailPage /> }
+      { path: '/events/:slug', element: <EventDetailPage /> },
+      { path: '/organizers/:username', element: <OrganizerProfilePage /> }
     ]
   },
 
