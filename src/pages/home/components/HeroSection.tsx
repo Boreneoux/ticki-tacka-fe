@@ -95,14 +95,14 @@ export default function HeroSection() {
                     >
                         <div className="flex flex-col md:flex-row items-center gap-0">
                             {/* Search Input */}
-                            <div className="relative flex-1 w-full md:w-auto">
+                            <div className="relative flex-1 min-w-0 md:min-w-[200px] w-full">
                                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-[#94a3b8] pointer-events-none" />
                                 <Input
                                     type="text"
                                     value={searchInput}
                                     onChange={(e) => setSearchInput(e.target.value)}
                                     placeholder="Search events..."
-                                    className="pl-12 pr-4 h-12 border-0 shadow-none focus-visible:ring-0 text-foreground bg-transparent placeholder:text-[#94a3b8] text-[15px]"
+                                    className="pl-12 pr-4 h-12 w-full border-0 shadow-none focus-visible:ring-0 text-foreground bg-transparent placeholder:text-[#94a3b8] text-[15px]"
                                 />
                             </div>
 
