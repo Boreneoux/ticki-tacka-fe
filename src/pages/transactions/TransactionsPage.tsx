@@ -64,7 +64,6 @@ export default function TransactionsPage() {
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-5xl mx-auto">
-
           <div className="mb-8">
             <h1 className="text-3xl font-bold mb-2">My Transactions</h1>
             <p className="text-muted-foreground">
@@ -72,10 +71,11 @@ export default function TransactionsPage() {
             </p>
           </div>
 
-
           <Tabs
             value={selectedStatus}
-            onValueChange={val => setSelectedStatus(val as TransactionStatus | 'all')}>
+            onValueChange={val =>
+              setSelectedStatus(val as TransactionStatus | 'all')
+            }>
             <TabsList className="w-full flex mb-8 overflow-x-auto">
               {STATUS_TABS.map(tab => (
                 <TabsTrigger
@@ -87,7 +87,6 @@ export default function TransactionsPage() {
               ))}
             </TabsList>
           </Tabs>
-
 
           {isLoading && (
             <div className="space-y-4">
@@ -112,7 +111,6 @@ export default function TransactionsPage() {
             </div>
           )}
 
-
           {error && !isLoading && (
             <EmptyState
               icon="alert"
@@ -121,7 +119,6 @@ export default function TransactionsPage() {
               variant="card"
             />
           )}
-
 
           {!isLoading && !error && transactions.length === 0 && (
             <EmptyState
@@ -132,11 +129,13 @@ export default function TransactionsPage() {
                   ? "You haven't made any purchases yet. Browse events and get your tickets!"
                   : `No transactions with "${STATUS_TABS.find(t => t.value === selectedStatus)?.label ?? selectedStatus}" status.`
               }
-              action={{ label: 'Browse Events', onClick: () => navigate('/events') }}
+              action={{
+                label: 'Browse Events',
+                onClick: () => navigate('/events')
+              }}
               variant="card"
             />
           )}
-
 
           {!isLoading && !error && transactions.length > 0 && (
             <div className="space-y-4">
@@ -145,7 +144,6 @@ export default function TransactionsPage() {
               ))}
             </div>
           )}
-
 
           {pagination && pagination.totalPages > 1 && (
             <div className="flex items-center justify-center gap-4 mt-8">
@@ -176,8 +174,6 @@ export default function TransactionsPage() {
   );
 }
 
-
-
 function TransactionCard({
   transaction: txn,
   index
@@ -198,15 +194,13 @@ function TransactionCard({
       onClick={() => navigate(`/transactions/${txn.id}`)}>
       <CardContent className="p-6">
         <div className="flex flex-col lg:flex-row lg:items-center gap-6">
-
-          <div className="flex-shrink-0">
+          <div className="shrink-0">
             <img
               src={getTransactionImage(txn)}
               alt={txn.event?.name ?? 'Event'}
               className="w-full lg:w-40 h-32 object-cover rounded-lg"
             />
           </div>
-
 
           <div className="flex-1 space-y-3">
             <div className="flex items-start justify-between gap-4">
@@ -227,26 +221,26 @@ function TransactionCard({
               </Badge>
             </div>
 
-
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
               <div className="flex items-center text-muted-foreground">
-                <Calendar className="h-4 w-4 mr-2 flex-shrink-0" />
+                <Calendar className="h-4 w-4 mr-2 shrink-0" />
                 <span className="truncate">
-                  {txn.event?.eventDate ? formatDateShort(txn.event.eventDate) : '—'}
+                  {txn.event?.eventDate
+                    ? formatDateShort(txn.event.eventDate)
+                    : '—'}
                 </span>
               </div>
               <div className="flex items-center text-muted-foreground">
-                <MapPin className="h-4 w-4 mr-2 flex-shrink-0" />
+                <MapPin className="h-4 w-4 mr-2 shrink-0" />
                 <span className="truncate">{txn.event?.venueName ?? '—'}</span>
               </div>
               <div className="flex items-center text-muted-foreground">
-                <Ticket className="h-4 w-4 mr-2 flex-shrink-0" />
+                <Ticket className="h-4 w-4 mr-2 shrink-0" />
                 <span>
                   {totalTickets} ticket{totalTickets > 1 ? 's' : ''}
                 </span>
               </div>
             </div>
-
 
             {txn.transactionItems && txn.transactionItems.length > 0 && (
               <div className="text-sm text-muted-foreground">
@@ -258,7 +252,6 @@ function TransactionCard({
                 ))}
               </div>
             )}
-
 
             <div className="flex items-center justify-between pt-3 border-t">
               <div>
