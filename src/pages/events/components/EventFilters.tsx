@@ -1,7 +1,9 @@
 import { useCallback } from 'react';
+import { Search } from 'lucide-react';
 
 import type { Category, Province, City } from '@/types/models';
-import SearchInput from '@/components/ui/SearchInput';
+import Input from '@/components/ui/Input';
+import Button from '@/components/ui/Button';
 import {
     Select,
     SelectContent,
@@ -34,13 +36,9 @@ export default function EventFilters({
     searchValue,
     onSearchChange,
     onSearchSubmit,
-    isSearchLoading,
     categoryId,
     onCategoryChange,
     categories,
-    provinceId,
-    onProvinceChange,
-    provinces,
     cityId,
     onCityChange,
     cities,
@@ -53,14 +51,6 @@ export default function EventFilters({
         [onCategoryChange]
     );
 
-    const handleProvinceChange = useCallback(
-        (value: string) => {
-            onProvinceChange(value === 'all' ? '' : value);
-            onCityChange('');
-        },
-        [onProvinceChange, onCityChange]
-    );
-
     const handleCityChange = useCallback(
         (value: string) => {
             onCityChange(value === 'all' ? '' : value);
@@ -68,26 +58,38 @@ export default function EventFilters({
         [onCityChange]
     );
 
-    return (
-        <div className="space-y-4">
-            {/* Search */}
-            <SearchInput
-                value={searchValue}
-                onChange={onSearchChange}
-                onSearch={onSearchSubmit}
-                placeholder="Search events by name..."
-                isLoading={isSearchLoading}
-                className="w-full"
-            />
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        onSearchSubmit(searchValue);
+    };
 
-            {/* Filter Row */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                {/* Category */}
+    return (
+        <form
+            onSubmit={handleSubmit}
+            className="bg-white rounded-2xl shadow-2xl p-2 md:p-3"
+        >
+            <div className="flex flex-col md:flex-row items-center gap-0">
+                {/* Search Input */}
+                <div className="relative flex-1 w-full md:w-auto">
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-[#94a3b8] pointer-events-none" />
+                    <Input
+                        type="text"
+                        value={searchValue}
+                        onChange={(e) => onSearchChange(e.target.value)}
+                        placeholder="Search events..."
+                        className="pl-12 pr-4 h-12 border-0 shadow-none focus-visible:ring-0 text-foreground bg-transparent placeholder:text-[#94a3b8] text-[15px]"
+                    />
+                </div>
+
+                {/* Divider */}
+                <div className="hidden md:block w-px bg-[#e2e8f0] self-stretch my-2" />
+
+                {/* Category Select */}
                 <Select
                     value={categoryId || 'all'}
                     onValueChange={handleCategoryChange}
                 >
-                    <SelectTrigger>
+                    <SelectTrigger className="h-12 min-w-[170px] border-0 shadow-none focus-visible:ring-0 text-[15px] text-foreground px-5">
                         <SelectValue placeholder="All Categories" />
                     </SelectTrigger>
                     <SelectContent>
@@ -100,38 +102,20 @@ export default function EventFilters({
                     </SelectContent>
                 </Select>
 
-                {/* Province */}
-                <Select
-                    value={provinceId || 'all'}
-                    onValueChange={handleProvinceChange}
-                >
-                    <SelectTrigger>
-                        <SelectValue placeholder="All Provinces" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="all">All Provinces</SelectItem>
-                        {provinces.map((prov) => (
-                            <SelectItem key={prov.id} value={prov.id}>
-                                {prov.name}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
+                {/* Divider */}
+                <div className="hidden md:block w-px bg-[#e2e8f0] self-stretch my-2" />
 
-                {/* City */}
+                {/* City Select */}
                 <Select
                     value={cityId || 'all'}
                     onValueChange={handleCityChange}
-                    disabled={!provinceId || isCitiesLoading}
                 >
-                    <SelectTrigger>
+                    <SelectTrigger className="h-12 min-w-[150px] border-0 shadow-none focus-visible:ring-0 text-[15px] text-foreground px-5">
                         <SelectValue
                             placeholder={
-                                !provinceId
-                                    ? 'Select province first'
-                                    : isCitiesLoading
-                                        ? 'Loading cities...'
-                                        : 'All Cities'
+                                isCitiesLoading
+                                    ? 'Loading...'
+                                    : 'All Cities'
                             }
                         />
                     </SelectTrigger>
@@ -144,7 +128,20 @@ export default function EventFilters({
                         ))}
                     </SelectContent>
                 </Select>
+
+                {/* Search Button */}
+                <div className="p-1 md:pl-2">
+                    <Button
+                        type="submit"
+                        size="icon"
+                        className="h-11 w-11 rounded-xl shrink-0 bg-[#1a3a4a] hover:bg-[#152f3d] text-white"
+                    >
+                        <Search className="size-5" />
+                        <span className="sr-only">Search</span>
+                    </Button>
+                </div>
             </div>
-        </div>
+        </form>
     );
 }
+
