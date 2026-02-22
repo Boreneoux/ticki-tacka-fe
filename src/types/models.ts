@@ -75,6 +75,13 @@ export type EventVoucher = {
   isActive: boolean;
 };
 
+export type EventImage = {
+  id: string;
+  eventId: string;
+  imageUrl: string;
+  imagePublicId: string;
+};
+
 export type Event = {
   id: string;
   slug: string;
@@ -95,6 +102,7 @@ export type Event = {
   city?: City;
   organizer?: Organizer;
   ticketTypes?: TicketType[];
+  eventImages?: EventImage[];
   vouchers?: EventVoucher[];
   lowestPrice?: number;
 };
