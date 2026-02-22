@@ -1,10 +1,21 @@
-import type { Event, Category, Province, City, Pagination } from '@/types/models';
+import type { Event, Category, Province, City, Pagination, TicketType, Review } from '@/types/models';
 
 // --- API Response Types ---
 
 export type EventListResponseData = {
     events: Event[];
     pagination: Pagination;
+};
+
+export type EventDetailResponseData = Event;
+
+export type TicketTypeListResponseData = TicketType[];
+
+export type ReviewListResponseData = {
+    reviews: Review[];
+    pagination: Pagination;
+    averageRating: number;
+    totalReviews: number;
 };
 
 export type CategoryListResponseData = Category[];
@@ -21,4 +32,16 @@ export type EventListParams = {
     city?: string;
     page?: number;
     limit?: number;
+};
+
+export type ReviewListParams = {
+    page?: number;
+    limit?: number;
+};
+
+// --- Payloads ---
+
+export type CreateReviewPayload = {
+    rating: number;
+    reviewText?: string;
 };
