@@ -70,12 +70,16 @@ function EditEventPageContent({
     deleteTicketType,
     isLoading: isTicketLoading
   } = useTicketTypeManagement(event?.id || '', event?.ticketTypes);
-  const { formik: voucherFormik } = useCreateVoucherForm(
-    event?.id || '',
-    refetch
-  );
 
   const [isVoucherModalOpen, setIsVoucherModalOpen] = useState(false);
+
+  const { formik: voucherFormik } = useCreateVoucherForm(
+    event?.id || '',
+    () => {
+      refetch();
+      setIsVoucherModalOpen(false);
+    }
+  );
 
   const { publishEvent, cancelEvent, deleteEvent } = useEventActions(refetch);
   const { confirm, dialog } = useConfirmDialog();
@@ -207,7 +211,7 @@ function EditEventPageContent({
           <TabsContent value="vouchers" className="mt-0">
             <div className="space-y-8 pb-8">
               <VoucherList
-                vouchers={event.vouchers || []}
+                vouchers={event.eventVouchers ?? event.vouchers ?? []}
                 onCreateClick={() => setIsVoucherModalOpen(true)}
               />
             </div>

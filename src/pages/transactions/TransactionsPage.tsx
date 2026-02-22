@@ -15,11 +15,11 @@ import {
 
 import useTransactions from '@/features/transactions/hooks/useTransactions';
 import {
-  formatPrice,
   formatDateShort,
   statusConfigMap,
   getTransactionImage
 } from '@/features/transactions/helpers';
+import { formatCurrency } from '@/utils/format';
 import type { TransactionStatus } from '@/types/enums';
 import type { Transaction } from '@/types/models';
 
@@ -257,7 +257,7 @@ function TransactionCard({
               <div>
                 <p className="text-xs text-muted-foreground">Total Payment</p>
                 <p className="text-xl font-bold text-primary">
-                  {formatPrice(txn.totalAmount)}
+                  {formatCurrency(txn.totalAmount)}
                 </p>
               </div>
               <div className="text-right">

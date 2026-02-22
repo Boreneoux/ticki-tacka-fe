@@ -4,21 +4,12 @@ import { Calendar, MapPin } from 'lucide-react';
 import type { Event } from '@/types/models';
 import { Card, CardContent } from '@/components/ui/Card';
 import Badge from '@/components/ui/Badge';
+import { formatEventPrice } from '@/utils/format';
 
 type EventCardProps = {
   event: Event;
   index?: number;
 };
-
-function formatPrice(price: number): string {
-  if (price === 0) return 'Free';
-  return new Intl.NumberFormat('id-ID', {
-    style: 'currency',
-    currency: 'IDR',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0
-  }).format(price);
-}
 
 export default function EventCard({ event, index = 0 }: EventCardProps) {
   const navigate = useNavigate();
@@ -88,7 +79,7 @@ export default function EventCard({ event, index = 0 }: EventCardProps) {
         <div className="pt-3 border-t border-border">
           <p className="text-xs text-muted-foreground">Starting from</p>
           <p className="font-bold text-lg text-primary">
-            {formatPrice(lowestPrice)}
+            {formatEventPrice(lowestPrice)}
           </p>
         </div>
       </CardContent>

@@ -18,12 +18,12 @@ import toast from 'react-hot-toast';
 
 import useTransactionDetail from '@/features/transactions/hooks/useTransactionDetail';
 import {
-  formatPrice,
   formatDateTimeLong,
   formatDateTime,
   formatDateShort,
   statusConfigMap
 } from '@/features/transactions/helpers';
+import { formatCurrency } from '@/utils/format';
 import type { TransactionStatus } from '@/types/enums';
 
 import Button from '@/components/ui/Button';
@@ -34,8 +34,6 @@ import FileUpload from '@/components/ui/FileUpload';
 import ConfirmDialog from '@/components/ui/ConfirmDialog';
 import Skeleton from '@/components/ui/Skeleton';
 import EmptyState from '@/components/ui/EmptyState';
-
-
 
 type TimelineStep = {
   label: string;
@@ -79,14 +77,12 @@ function getTimelineSteps(txn: {
     return steps;
   }
 
-
   steps.push({
     label: 'Payment Proof Uploaded',
     date: txn.proofUploadedAt,
     status: txn.proofUploadedAt ? 'done' : 'pending',
     icon: <Upload className="h-4 w-4" />
   });
-
 
   if (txn.paymentStatus === 'rejected') {
     steps.push({
@@ -125,7 +121,6 @@ export default function TransactionDetailPage() {
   const [showCancelDialog, setShowCancelDialog] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
 
-
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background">
@@ -147,7 +142,6 @@ export default function TransactionDetailPage() {
     );
   }
 
-
   if (error || !txn) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
@@ -155,7 +149,10 @@ export default function TransactionDetailPage() {
           icon="alert"
           title="Transaction Not Found"
           description="The transaction you're looking for doesn't exist or you don't have access."
-          action={{ label: 'My Transactions', onClick: () => navigate('/transactions') }}
+          action={{
+            label: 'My Transactions',
+            onClick: () => navigate('/transactions')
+          }}
           variant="card"
         />
       </div>
@@ -165,8 +162,10 @@ export default function TransactionDetailPage() {
   const config = statusConfigMap[txn.paymentStatus];
   const canUpload = txn.paymentStatus === 'waiting_for_payment';
   const canCancel = txn.paymentStatus === 'waiting_for_payment';
-  const totalTickets = txn.transactionItems?.reduce((sum, i) => sum + i.quantity, 0) ?? 0;
-  const eventImage = txn.event?.eventImages?.[0]?.imageUrl || '/placeholder-event.jpg';
+  const totalTickets =
+    txn.transactionItems?.reduce((sum, i) => sum + i.quantity, 0) ?? 0;
+  const eventImage =
+    txn.event?.eventImages?.[0]?.imageUrl || '/placeholder-event.jpg';
   const timelineSteps = getTimelineSteps(txn);
 
   const handleUpload = async () => {
@@ -199,7 +198,6 @@ export default function TransactionDetailPage() {
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-5xl mx-auto">
-
           <Button
             variant="ghost"
             onClick={() => navigate('/transactions')}
@@ -207,7 +205,6 @@ export default function TransactionDetailPage() {
             <ChevronLeft className="h-4 w-4 mr-2" />
             My Transactions
           </Button>
-
 
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
             <div>
@@ -217,36 +214,38 @@ export default function TransactionDetailPage() {
                 {txn.invoiceNumber}
               </p>
             </div>
-            <Badge variant={config?.variant ?? 'default'} className="text-sm px-4 py-1.5">
+            <Badge
+              variant={config?.variant ?? 'default'}
+              className="text-sm px-4 py-1.5">
               {config?.label ?? txn.paymentStatus}
             </Badge>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-
             <div className="lg:col-span-2 space-y-6">
-
-              {txn.paymentStatus === 'waiting_for_payment' && txn.paymentDeadline && (
-                <Card className="border-0 shadow-lg border-l-4 border-l-orange-500">
-                  <CardContent className="p-4">
-                    <div className="flex items-center space-x-3 mb-3">
-                      <Clock className="h-5 w-5 text-orange-500" />
-                      <p className="font-semibold text-orange-700 dark:text-orange-400">
-                        Payment Deadline
-                      </p>
-                    </div>
-                    <CountdownTimer
-                      deadline={txn.paymentDeadline}
-                      variant="compact"
-                      onExpire={() => {
-                        toast.error('Payment deadline has passed. Transaction expired.');
-                        refetch();
-                      }}
-                    />
-                  </CardContent>
-                </Card>
-              )}
-
+              {txn.paymentStatus === 'waiting_for_payment' &&
+                txn.paymentDeadline && (
+                  <Card className="border-0 shadow-lg border-l-4 border-l-orange-500">
+                    <CardContent className="p-4">
+                      <div className="flex items-center space-x-3 mb-3">
+                        <Clock className="h-5 w-5 text-orange-500" />
+                        <p className="font-semibold text-orange-700 dark:text-orange-400">
+                          Payment Deadline
+                        </p>
+                      </div>
+                      <CountdownTimer
+                        deadline={txn.paymentDeadline}
+                        variant="compact"
+                        onExpire={() => {
+                          toast.error(
+                            'Payment deadline has passed. Transaction expired.'
+                          );
+                          refetch();
+                        }}
+                      />
+                    </CardContent>
+                  </Card>
+                )}
 
               <Card className="border-0 shadow-lg">
                 <CardHeader>
@@ -262,7 +261,9 @@ export default function TransactionDetailPage() {
                     <div className="flex-1 space-y-2">
                       <h3 className="font-bold text-lg">
                         <Link
-                          to={txn.event?.slug ? `/events/${txn.event.slug}` : '#'}
+                          to={
+                            txn.event?.slug ? `/events/${txn.event.slug}` : '#'
+                          }
                           className="hover:text-primary transition-colors">
                           {txn.event?.name ?? 'Unknown Event'}
                           <ExternalLink className="h-3 w-3 inline-block ml-1" />
@@ -283,7 +284,6 @@ export default function TransactionDetailPage() {
                 </CardContent>
               </Card>
 
-
               <Card className="border-0 shadow-lg">
                 <CardHeader>
                   <CardTitle>Ticket Details</CardTitle>
@@ -295,18 +295,21 @@ export default function TransactionDetailPage() {
                         key={item.id}
                         className="flex items-center justify-between py-3 border-b last:border-b-0">
                         <div>
-                          <p className="font-semibold">{item.ticketType?.name ?? 'Ticket'}</p>
+                          <p className="font-semibold">
+                            {item.ticketType?.name ?? 'Ticket'}
+                          </p>
                           <p className="text-sm text-muted-foreground">
-                            {formatPrice(item.unitPrice)} × {item.quantity}
+                            {formatCurrency(item.unitPrice)} × {item.quantity}
                           </p>
                         </div>
-                        <p className="font-semibold">{formatPrice(item.subtotal)}</p>
+                        <p className="font-semibold">
+                          {formatCurrency(item.subtotal)}
+                        </p>
                       </div>
                     ))}
                   </div>
                 </CardContent>
               </Card>
-
 
               {canUpload && (
                 <Card className="border-0 shadow-lg">
@@ -344,7 +347,6 @@ export default function TransactionDetailPage() {
                 </Card>
               )}
 
-
               {txn.paymentProofUrl && (
                 <Card className="border-0 shadow-lg">
                   <CardHeader>
@@ -374,7 +376,6 @@ export default function TransactionDetailPage() {
                 </Card>
               )}
 
-
               <Card className="border-0 shadow-lg">
                 <CardHeader>
                   <CardTitle>Status Timeline</CardTitle>
@@ -383,13 +384,13 @@ export default function TransactionDetailPage() {
                   <div className="relative">
                     {timelineSteps.map((step, i) => (
                       <div key={i} className="flex gap-4 pb-6 last:pb-0">
-
                         <div className="flex flex-col items-center">
                           <div
-                            className={`flex items-center justify-center w-8 h-8 rounded-full border-2 ${step.status === 'done'
-                              ? 'bg-primary text-primary-foreground border-primary'
-                              : 'bg-muted text-muted-foreground border-muted'
-                              }`}>
+                            className={`flex items-center justify-center w-8 h-8 rounded-full border-2 ${
+                              step.status === 'done'
+                                ? 'bg-primary text-primary-foreground border-primary'
+                                : 'bg-muted text-muted-foreground border-muted'
+                            }`}>
                             {step.icon}
                           </div>
                           {i < timelineSteps.length - 1 && (
@@ -399,10 +400,11 @@ export default function TransactionDetailPage() {
 
                         <div className="flex-1 pt-1">
                           <p
-                            className={`font-medium text-sm ${step.status === 'done'
-                              ? 'text-foreground'
-                              : 'text-muted-foreground'
-                              }`}>
+                            className={`font-medium text-sm ${
+                              step.status === 'done'
+                                ? 'text-foreground'
+                                : 'text-muted-foreground'
+                            }`}>
                             {step.label}
                           </p>
                           {step.date && (
@@ -418,9 +420,7 @@ export default function TransactionDetailPage() {
               </Card>
             </div>
 
-
             <div className="lg:col-span-1 space-y-6">
-
               <Card className="border-0 shadow-lg sticky top-8">
                 <CardHeader>
                   <CardTitle>Payment Summary</CardTitle>
@@ -428,29 +428,30 @@ export default function TransactionDetailPage() {
                 <CardContent className="space-y-3">
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">
-                      Subtotal ({totalTickets} ticket{totalTickets > 1 ? 's' : ''})
+                      Subtotal ({totalTickets} ticket
+                      {totalTickets > 1 ? 's' : ''})
                     </span>
-                    <span>{formatPrice(txn.subtotal)}</span>
+                    <span>{formatCurrency(txn.subtotal)}</span>
                   </div>
 
                   {txn.pointsUsed > 0 && (
                     <div className="flex justify-between text-sm text-green-600">
                       <span>Points Discount</span>
-                      <span>-{formatPrice(txn.pointsUsed)}</span>
+                      <span>-{formatCurrency(txn.pointsUsed)}</span>
                     </div>
                   )}
 
                   {txn.couponDiscount > 0 && (
                     <div className="flex justify-between text-sm text-green-600">
                       <span>Coupon Discount</span>
-                      <span>-{formatPrice(txn.couponDiscount)}</span>
+                      <span>-{formatCurrency(txn.couponDiscount)}</span>
                     </div>
                   )}
 
                   {txn.voucherDiscount > 0 && (
                     <div className="flex justify-between text-sm text-green-600">
                       <span>Voucher Discount</span>
-                      <span>-{formatPrice(txn.voucherDiscount)}</span>
+                      <span>-{formatCurrency(txn.voucherDiscount)}</span>
                     </div>
                   )}
 
@@ -458,19 +459,19 @@ export default function TransactionDetailPage() {
                     <div className="flex justify-between">
                       <span className="font-bold">Total</span>
                       <span className="font-bold text-xl text-primary">
-                        {formatPrice(txn.totalAmount)}
+                        {formatCurrency(txn.totalAmount)}
                       </span>
                     </div>
                   </div>
 
-
                   <div className="text-sm text-muted-foreground pt-2 border-t">
                     <p>Ordered on {formatDateShort(txn.createdAt)}</p>
-                    {txn.confirmedAt && <p>Confirmed on {formatDateShort(txn.confirmedAt)}</p>}
+                    {txn.confirmedAt && (
+                      <p>Confirmed on {formatDateShort(txn.confirmedAt)}</p>
+                    )}
                   </div>
                 </CardContent>
               </Card>
-
 
               {canCancel && (
                 <Button
@@ -485,7 +486,6 @@ export default function TransactionDetailPage() {
           </div>
         </div>
       </div>
-
 
       <ConfirmDialog
         open={showCancelDialog}

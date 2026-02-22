@@ -1,17 +1,9 @@
 import type { TicketBreakdownItem } from '@/features/dashboard/types';
+import { formatCurrency } from '@/utils/format';
 
 type Props = {
   breakdown: TicketBreakdownItem[];
 };
-
-function formatCurrency(value: number): string {
-  return new Intl.NumberFormat('id-ID', {
-    style: 'currency',
-    currency: 'IDR',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0
-  }).format(value);
-}
 
 export default function TicketBreakdownTable({ breakdown }: Props) {
   if (breakdown.length === 0) {

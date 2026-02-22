@@ -140,8 +140,11 @@ export default function CreateVoucherModal({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>Start Date *</Label>
-              <Input type="date" {...formik.getFieldProps('startDate')} />
+              <Label>Start Date & Time *</Label>
+              <Input
+                type="datetime-local"
+                {...formik.getFieldProps('startDate')}
+              />
               {formik.touched.startDate && formik.errors.startDate && (
                 <p className="text-[10px] text-destructive">
                   {formik.errors.startDate as string}
@@ -149,8 +152,11 @@ export default function CreateVoucherModal({
               )}
             </div>
             <div className="space-y-2">
-              <Label>End Date *</Label>
-              <Input type="date" {...formik.getFieldProps('expiredAt')} />
+              <Label>End Date & Time *</Label>
+              <Input
+                type="datetime-local"
+                {...formik.getFieldProps('expiredAt')}
+              />
               {formik.touched.expiredAt && formik.errors.expiredAt && (
                 <p className="text-[10px] text-destructive">
                   {formik.errors.expiredAt as string}

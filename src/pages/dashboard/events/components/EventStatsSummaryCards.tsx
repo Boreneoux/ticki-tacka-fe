@@ -1,18 +1,10 @@
 import { TrendingUp, Ticket, Users } from 'lucide-react';
 import type { EventSummary } from '@/features/dashboard/types';
+import { formatCurrency } from '@/utils/format';
 
 type Props = {
   summary: EventSummary;
 };
-
-function formatCurrency(value: number): string {
-  return new Intl.NumberFormat('id-ID', {
-    style: 'currency',
-    currency: 'IDR',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0
-  }).format(value);
-}
 
 type StatCardProps = {
   icon: React.ReactNode;

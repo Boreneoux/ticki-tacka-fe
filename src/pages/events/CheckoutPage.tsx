@@ -12,9 +12,12 @@ import toast from 'react-hot-toast';
 import axios from 'axios';
 
 import useAuthStore from '@/stores/useAuthStore';
-import { getPointsApi, getCouponsApi } from '@/features/profile/api/profile.api';
+import {
+  getPointsApi,
+  getCouponsApi
+} from '@/features/profile/api/profile.api';
 import { createTransactionApi } from '@/features/transactions/api/transactions.api';
-import { formatPrice } from '@/features/transactions/helpers';
+import { formatCurrency } from '@/utils/format';
 import type { Event, EventVoucher } from '@/types/models';
 import type { CouponEntry } from '@/features/profile/types';
 
@@ -49,7 +52,11 @@ export default function CheckoutPage() {
       return;
     }
 
-    if (!selectedTickets || Object.keys(selectedTickets).length === 0 || !event) {
+    if (
+      !selectedTickets ||
+      Object.keys(selectedTickets).length === 0 ||
+      !event
+    ) {
       navigate(`/events/${slug}`);
     }
   }, [selectedTickets, slug, navigate, isLogin, event]);
@@ -110,10 +117,15 @@ export default function CheckoutPage() {
   const subtotal = items.reduce((sum, item) => sum + item.subtotal, 0);
   const totalTickets = items.reduce((sum, item) => sum + item.quantity, 0);
 
-  // Available vouchers
-  const availableVouchers = (event.eventVouchers ?? event.vouchers ?? []).filter(
+  // Available vouchers — active, started, not expired, quota remaining
+  const availableVouchers = (
+    event.eventVouchers ??
+    event.vouchers ??
+    []
+  ).filter(
     (v: EventVoucher) =>
       v.isActive &&
+      new Date(v.startDate) <= new Date() &&
       new Date(v.expiredAt) > new Date() &&
       v.usedCount < v.maxUsage
   );
@@ -137,7 +149,9 @@ export default function CheckoutPage() {
   // Calculate voucher discount
   const voucherDiscount = useMemo(() => {
     if (!selectedVoucher || selectedVoucher === 'none') return 0;
-    const voucher = availableVouchers.find((v: EventVoucher) => v.id === selectedVoucher);
+    const voucher = availableVouchers.find(
+      (v: EventVoucher) => v.id === selectedVoucher
+    );
     if (!voucher) return 0;
 
     if (voucher.discountType === 'percentage') {
@@ -150,7 +164,10 @@ export default function CheckoutPage() {
     return voucher.discountValue;
   }, [selectedVoucher, availableVouchers, subtotal]);
 
-  const total = Math.max(0, subtotal - pointsDiscount - couponDiscount - voucherDiscount);
+  const total = Math.max(
+    0,
+    subtotal - pointsDiscount - couponDiscount - voucherDiscount
+  );
 
   const handleCheckout = async () => {
     setIsSubmitting(true);
@@ -163,8 +180,10 @@ export default function CheckoutPage() {
           quantity: item.quantity
         })),
         usePoints,
-        ...(selectedCoupon && selectedCoupon !== 'none' && { userCouponId: selectedCoupon }),
-        ...(selectedVoucher && selectedVoucher !== 'none' && { eventVoucherId: selectedVoucher })
+        ...(selectedCoupon &&
+          selectedCoupon !== 'none' && { userCouponId: selectedCoupon }),
+        ...(selectedVoucher &&
+          selectedVoucher !== 'none' && { eventVoucherId: selectedVoucher })
       };
 
       const result = await createTransactionApi(payload);
@@ -173,7 +192,9 @@ export default function CheckoutPage() {
         toast.success('Order confirmed! Your tickets are ready.');
         navigate('/transactions');
       } else {
-        toast.success('Order created! Please upload payment proof within 2 hours.');
+        toast.success(
+          'Order created! Please upload payment proof within 2 hours.'
+        );
         navigate(`/transactions/${result.id}`);
       }
     } catch (error) {
@@ -202,7 +223,9 @@ export default function CheckoutPage() {
           <div className="flex items-center justify-between mb-8">
             <div>
               <h1 className="text-3xl font-bold mb-2">Checkout</h1>
-              <p className="text-muted-foreground">Complete your ticket purchase</p>
+              <p className="text-muted-foreground">
+                Complete your ticket purchase
+              </p>
             </div>
           </div>
 
@@ -235,7 +258,9 @@ export default function CheckoutPage() {
                           year: 'numeric'
                         })}
                       </p>
-                      <p className="text-sm text-muted-foreground">{event.venueName}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {event.venueName}
+                      </p>
                     </div>
                   </div>
                 </CardContent>
@@ -248,14 +273,20 @@ export default function CheckoutPage() {
                 </CardHeader>
                 <CardContent className="space-y-3">
                   {items.map(({ ticketTypeId, ticket, quantity, subtotal }) => (
-                    <div key={ticketTypeId} className="flex items-center justify-between py-2">
+                    <div
+                      key={ticketTypeId}
+                      className="flex items-center justify-between py-2">
                       <div className="flex-1">
-                        <p className="font-semibold">{ticket?.name ?? 'Ticket'}</p>
+                        <p className="font-semibold">
+                          {ticket?.name ?? 'Ticket'}
+                        </p>
                         <p className="text-sm text-muted-foreground">
-                          {formatPrice(ticket?.price ?? 0)} × {quantity}
+                          {formatCurrency(ticket?.price ?? 0)} × {quantity}
                         </p>
                       </div>
-                      <p className="font-semibold">{formatPrice(subtotal)}</p>
+                      <p className="font-semibold">
+                        {formatCurrency(subtotal)}
+                      </p>
                     </div>
                   ))}
                 </CardContent>
@@ -280,8 +311,8 @@ export default function CheckoutPage() {
                         <div>
                           <p className="font-semibold">Use Points</p>
                           <p className="text-sm text-muted-foreground">
-                            You have {pointBalance.toLocaleString('id-ID')} points
-                            (= {formatPrice(pointBalance)})
+                            You have {pointBalance.toLocaleString('id-ID')}{' '}
+                            points (= {formatCurrency(pointBalance)})
                           </p>
                         </div>
                       </Label>
@@ -305,13 +336,17 @@ export default function CheckoutPage() {
                   <div>
                     <Label>User Coupon</Label>
                     {isLoadingDiscounts ? (
-                      <p className="text-sm text-muted-foreground mt-2">Loading coupons...</p>
+                      <p className="text-sm text-muted-foreground mt-2">
+                        Loading coupons...
+                      </p>
                     ) : coupons.length === 0 ? (
                       <p className="text-sm text-muted-foreground mt-2">
                         No available coupons
                       </p>
                     ) : (
-                      <Select value={selectedCoupon} onValueChange={setSelectedCoupon}>
+                      <Select
+                        value={selectedCoupon}
+                        onValueChange={setSelectedCoupon}>
                         <SelectTrigger className="mt-2">
                           <SelectValue placeholder="Select a coupon" />
                         </SelectTrigger>
@@ -322,7 +357,7 @@ export default function CheckoutPage() {
                               {coupon.couponCode} —{' '}
                               {coupon.discountType === 'percentage'
                                 ? `${coupon.discountValue}% off`
-                                : formatPrice(coupon.discountValue)}
+                                : formatCurrency(coupon.discountValue)}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -340,7 +375,9 @@ export default function CheckoutPage() {
                         No available vouchers for this event
                       </p>
                     ) : (
-                      <Select value={selectedVoucher} onValueChange={setSelectedVoucher}>
+                      <Select
+                        value={selectedVoucher}
+                        onValueChange={setSelectedVoucher}>
                         <SelectTrigger className="mt-2">
                           <SelectValue placeholder="Select a voucher" />
                         </SelectTrigger>
@@ -351,7 +388,7 @@ export default function CheckoutPage() {
                               {voucher.voucherCode} — {voucher.voucherName} —{' '}
                               {voucher.discountType === 'percentage'
                                 ? `${voucher.discountValue}% off`
-                                : formatPrice(voucher.discountValue)}
+                                : formatCurrency(voucher.discountValue)}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -368,8 +405,9 @@ export default function CheckoutPage() {
                   <div className="text-sm text-yellow-900 dark:text-yellow-200">
                     <p className="font-semibold mb-1">Important</p>
                     <p>
-                      You have 2 hours to complete the payment. If payment is not made within this time,
-                      your order will be automatically canceled and discounts will be rolled back.
+                      You have 2 hours to complete the payment. If payment is
+                      not made within this time, your order will be
+                      automatically canceled and discounts will be rolled back.
                     </p>
                   </div>
                 </CardContent>
@@ -386,30 +424,39 @@ export default function CheckoutPage() {
                   {/* Subtotal */}
                   <div className="flex items-center justify-between">
                     <span className="text-muted-foreground">
-                      Subtotal ({totalTickets} ticket{totalTickets > 1 ? 's' : ''})
+                      Subtotal ({totalTickets} ticket
+                      {totalTickets > 1 ? 's' : ''})
                     </span>
-                    <span className="font-semibold">{formatPrice(subtotal)}</span>
+                    <span className="font-semibold">
+                      {formatCurrency(subtotal)}
+                    </span>
                   </div>
 
                   {/* Discounts */}
                   {pointsDiscount > 0 && (
                     <div className="flex items-center justify-between text-accent">
                       <span className="text-sm">Points Discount</span>
-                      <span className="font-semibold">-{formatPrice(pointsDiscount)}</span>
+                      <span className="font-semibold">
+                        -{formatCurrency(pointsDiscount)}
+                      </span>
                     </div>
                   )}
 
                   {couponDiscount > 0 && (
                     <div className="flex items-center justify-between text-accent">
                       <span className="text-sm">Coupon Discount</span>
-                      <span className="font-semibold">-{formatPrice(couponDiscount)}</span>
+                      <span className="font-semibold">
+                        -{formatCurrency(couponDiscount)}
+                      </span>
                     </div>
                   )}
 
                   {voucherDiscount > 0 && (
                     <div className="flex items-center justify-between text-accent">
                       <span className="text-sm">Voucher Discount</span>
-                      <span className="font-semibold">-{formatPrice(voucherDiscount)}</span>
+                      <span className="font-semibold">
+                        -{formatCurrency(voucherDiscount)}
+                      </span>
                     </div>
                   )}
 
@@ -418,7 +465,9 @@ export default function CheckoutPage() {
                   {/* Total */}
                   <div className="flex items-center justify-between">
                     <span className="font-bold text-lg">Total</span>
-                    <span className="font-bold text-2xl text-primary">{formatPrice(total)}</span>
+                    <span className="font-bold text-2xl text-primary">
+                      {formatCurrency(total)}
+                    </span>
                   </div>
 
                   <Button

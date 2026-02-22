@@ -8,16 +8,42 @@ import type {
   UpdateTicketTypePayload,
   CreateVoucherPayload
 } from '../types';
-import type { TicketType, EventVoucher } from '@/types/models';
+import type {
+  TicketType,
+  EventVoucher,
+  Pagination,
+  Event
+} from '@/types/models';
+
+// Raw shape returned by the dashboard service (uses `page` / `totalCount`)
+type RawOrganizerEventsResponse = {
+  events: Event[];
+  pagination: {
+    page: number;
+    limit: number;
+    totalCount: number;
+    totalPages: number;
+  };
+};
 
 export async function getOrganizerEventsApi(
   params: OrganizerEventListParams = {}
-) {
-  const response = await api.get<ApiResponse<OrganizerEventListResponseData>>(
+): Promise<OrganizerEventListResponseData> {
+  const response = await api.get<ApiResponse<RawOrganizerEventsResponse>>(
     '/organizer/events',
     { params }
   );
-  return response.data.data;
+  const raw = response.data.data;
+
+  // Normalize the pagination shape so it matches the shared `Pagination` type
+  const pagination: Pagination = {
+    currentPage: raw.pagination.page,
+    totalPages: raw.pagination.totalPages,
+    totalItems: raw.pagination.totalCount,
+    limit: raw.pagination.limit
+  };
+
+  return { events: raw.events, pagination };
 }
 
 export async function getOrganizerEventDetailApi(idOrSlug: string) {
